@@ -12,7 +12,7 @@ const DEFAULT_LOCATION_DATA = {
   lon: '19.833549',
 };
 
-async function displayWeather({ cityName = null }) {
+async function displayWeather({ cityName = null, units = 'metric' }) {
   const { body } = document;
   const mainContainer = document.querySelector('main > .container');
   body.dataset.loading = true;
@@ -28,9 +28,19 @@ async function displayWeather({ cityName = null }) {
   }
   localStorage.setItem('locationData', JSON.stringify(locationData));
 
-  const weatherData = await getWeatherData(locationData.lat, locationData.lon);
-  render(createTodaySection(locationData, weatherData.current), mainContainer);
-  render(createDailySection(weatherData.daily), mainContainer);
+  const weatherData = await getWeatherData(
+    locationData.lat,
+    locationData.lon,
+    localStorage.getItem('units') ?? units
+  );
+  render(
+    createTodaySection(locationData, weatherData.current, weatherData.units),
+    mainContainer
+  );
+  render(
+    createDailySection(weatherData.daily, weatherData.units),
+    mainContainer
+  );
 
   let imageDescription = weatherData.current.weather.description;
   if (weatherData.current.weather.icon.endsWith('n')) {

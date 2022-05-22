@@ -8,7 +8,7 @@ function createCardFooter(description) {
   });
 }
 
-function createCardBody(icon, description, maxTemp, minTemp) {
+function createCardBody(icon, description, maxTemp, minTemp, units) {
   return createElement({
     attributes: {
       class: 'card-body',
@@ -31,7 +31,7 @@ function createCardBody(icon, description, maxTemp, minTemp) {
             attributes: {
               class: 'max-temp',
             },
-            content: `${Math.trunc(maxTemp)}&deg;C`,
+            content: `${Math.trunc(maxTemp)}&deg;${units}`,
             useInnerHTML: true,
           }),
           createElement({
@@ -39,7 +39,7 @@ function createCardBody(icon, description, maxTemp, minTemp) {
             attributes: {
               class: 'min-temp',
             },
-            content: `${Math.trunc(minTemp)}&deg;C`,
+            content: `${Math.trunc(minTemp)}&deg;${units}`,
             useInnerHTML: true,
           }),
         ],
@@ -58,7 +58,7 @@ function createCardHeader(dt) {
   });
 }
 
-function createCard(dayData) {
+function createCard(dayData, units) {
   return createElement({
     tagName: 'article',
     attributes: {
@@ -70,14 +70,15 @@ function createCard(dayData) {
         dayData.weather.icon,
         dayData.weather.description,
         dayData.temp.max,
-        dayData.temp.min
+        dayData.temp.min,
+        units
       ),
       createCardFooter(dayData.weather.description),
     ],
   });
 }
 
-function createDailySection(dailyData) {
+function createDailySection(dailyData, units) {
   return createElement({
     tagName: 'section',
     attributes: {
@@ -92,7 +93,7 @@ function createDailySection(dailyData) {
         attributes: {
           class: 'days',
         },
-        children: dailyData.map(createCard),
+        children: dailyData.map((day) => createCard(day, units)),
       }),
     ],
   });

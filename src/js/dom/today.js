@@ -1,7 +1,8 @@
 import { format, fromUnixTime } from 'date-fns';
-import { createElement } from './util';
+import { createElement, createEvent } from './util';
+import displayWeather from './weather';
 
-function createCardFooter(feelsLike, description) {
+function createCardFooter(feelsLike, description, units) {
   return createElement({
     tagName: 'footer',
     attributes: {
@@ -9,14 +10,14 @@ function createCardFooter(feelsLike, description) {
     },
     content: `Feels like ${Math.trunc(
       feelsLike
-    )}&deg;C. ${description[0].toUpperCase()}${description
+    )}&deg;${units}. ${description[0].toUpperCase()}${description
       .slice(1)
       .toLowerCase()}.`,
     useInnerHTML: true,
   });
 }
 
-function createCardBody(icon, description, temp, maxTemp, minTemp) {
+function createCardBody(icon, description, temp, maxTemp, minTemp, units) {
   return createElement({
     attributes: {
       class: 'card-body',
@@ -39,7 +40,7 @@ function createCardBody(icon, description, temp, maxTemp, minTemp) {
             attributes: {
               class: 'current-temp',
             },
-            content: `${Math.trunc(temp)}&deg;C`,
+            content: `${Math.trunc(temp)}&deg;${units}`,
             useInnerHTML: true,
           }),
           createElement({
@@ -49,7 +50,7 @@ function createCardBody(icon, description, temp, maxTemp, minTemp) {
                 attributes: {
                   class: 'max-temp',
                 },
-                content: `${Math.trunc(maxTemp)}&deg;C`,
+                content: `${Math.trunc(maxTemp)}&deg;${units}`,
                 useInnerHTML: true,
               }),
               createElement({
@@ -57,7 +58,7 @@ function createCardBody(icon, description, temp, maxTemp, minTemp) {
                 attributes: {
                   class: 'min-temp',
                 },
-                content: `${Math.trunc(minTemp)}&deg;C`,
+                content: `${Math.trunc(minTemp)}&deg;${units}`,
                 useInnerHTML: true,
               }),
             ],
@@ -68,7 +69,7 @@ function createCardBody(icon, description, temp, maxTemp, minTemp) {
   });
 }
 
-function createCardHeader(dt, name, country) {
+function createCardHeader(dt, name, country, units) {
   return createElement({
     tagName: 'header',
     attributes: {
@@ -93,31 +94,59 @@ function createCardHeader(dt, name, country) {
           }),
         ],
       }),
+      createElement({
+        tagName: 'button',
+        attributes: {
+          class: 'unit-toggle',
+        },
+        content: `&deg;${units}`,
+        useInnerHTML: true,
+        events: [
+          createEvent('click', () => {
+            const unitsName = units === 'F' ? 'metric' : 'imperial';
+            localStorage.setItem('units', unitsName);
+            displayWeather({
+              cityName: name,
+              units: unitsName,
+            });
+          }),
+        ],
+      }),
     ],
   });
 }
 
-function createCard(locationData, weatherData) {
+function createCard(locationData, weatherData, units) {
   return createElement({
     tagName: 'article',
     attributes: {
       class: 'card card-today',
     },
     children: [
-      createCardHeader(weatherData.dt, locationData.name, locationData.country),
+      createCardHeader(
+        weatherData.dt,
+        locationData.name,
+        locationData.country,
+        units
+      ),
       createCardBody(
         weatherData.weather.icon,
         weatherData.weather.description,
         weatherData.temp,
         weatherData.maxTemp,
-        weatherData.minTemp
+        weatherData.minTemp,
+        units
       ),
-      createCardFooter(weatherData.feelsLike, weatherData.weather.description),
+      createCardFooter(
+        weatherData.feelsLike,
+        weatherData.weather.description,
+        units
+      ),
     ],
   });
 }
 
-function createTodaySection(locationData, weatherData) {
+function createTodaySection(locationData, weatherData, units) {
   return createElement({
     tagName: 'section',
     attributes: {
@@ -128,7 +157,7 @@ function createTodaySection(locationData, weatherData) {
         tagName: 'h2',
         content: 'Today',
       }),
-      createCard(locationData, weatherData),
+      createCard(locationData, weatherData, units),
     ],
   });
 }
