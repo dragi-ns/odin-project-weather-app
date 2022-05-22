@@ -31,7 +31,7 @@ function processLocationData(data) {
 
 async function getLocationData(cityName) {
   const data = await makeRequest(
-    `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=60248eb14580b4855ad35e4611829094`
+    `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=60248eb14580b4855ad35e4611829094`
   );
   if (data.length === 0) {
     throw new Error('Invalid city name!');
