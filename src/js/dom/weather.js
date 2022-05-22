@@ -32,7 +32,11 @@ async function displayWeather({ cityName = null }) {
   render(createTodaySection(locationData, weatherData.current), mainContainer);
   render(createDailySection(weatherData.daily), mainContainer);
 
-  const imageData = await getImage(weatherData.current.weather.description);
+  let imageDescription = weatherData.current.weather.description;
+  if (weatherData.current.weather.icon.endsWith('n')) {
+    imageDescription += ' night';
+  }
+  const imageData = await getImage(imageDescription);
   body.style.backgroundImage = `url('${imageData.url}')`;
   render(
     createBackgroundCredit(
