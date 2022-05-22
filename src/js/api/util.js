@@ -1,5 +1,5 @@
 async function makeRequest(url) {
-  const response = await fetch(url);
+  const response = await fetch(url, { mode: 'cors' });
   if (!response.ok || response.status !== 200) {
     throw new Error(`Network request failed. Status: ${response.status}`);
   }

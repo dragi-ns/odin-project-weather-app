@@ -19,6 +19,3 @@ async function getImage(description) {
 }
 
 export default getImage;
-
-// TODO: When fetching background add this credit at the footer
-// Photo by <a href="https://unsplash.com/@username">full name</a> on <a href="https://unsplash.com/@htmlLInk">Unsplash</a>

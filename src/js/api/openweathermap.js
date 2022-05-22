@@ -2,35 +2,18 @@ import makeRequest from './util';
 
 function processWeatherData(data) {
   function extractDayData(dayData) {
-    const {
-      clouds,
-      dt,
-      feels_like: feelsLike,
-      humidity,
-      pressure,
-      sunrise,
-      sunset,
-      temp,
-      uvi,
-      weather,
-      wind_speed: windSpeed,
-    } = dayData;
+    const { dt, feels_like: feelsLike, temp, weather } = dayData;
     return {
-      clouds,
       dt,
       feelsLike,
-      humidity,
-      pressure,
-      sunrise,
-      sunset,
       temp,
-      uvi,
       weather: weather[0],
-      windSpeed,
     };
   }
   const current = extractDayData(data.current);
-  const daily = data.daily.map(extractDayData);
+  current.maxTemp = data.daily[0].temp.max;
+  current.minTemp = data.daily[0].temp.min;
+  const daily = data.daily.slice(1).map(extractDayData);
   return { current, daily };
 }
 
@@ -41,4 +24,19 @@ async function getWeatherData(lat, lon) {
   return processWeatherData(data);
 }
 
-export default getWeatherData;
+function processLocationData(data) {
+  const { name, country, lat, lon } = data[0];
+  return { name, country, lat, lon };
+}
+
+async function getLocationData(cityName) {
+  const data = await makeRequest(
+    `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=1&appid=60248eb14580b4855ad35e4611829094`
+  );
+  if (data.length === 0) {
+    throw new Error('Invalid city name!');
+  }
+  return processLocationData(data);
+}
+
+export { getWeatherData, getLocationData };

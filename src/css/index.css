@@ -25,13 +25,368 @@ button {
   font: inherit;
 }
 
+a {
+  color: white;
+  font-weight: bold;
+}
+
 :root {
   height: -webkit-fill-available;
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  flex-direction: column;
   height: 100vh;
   height: -webkit-fill-available;
-  background: no-repeat center / cover transparent;
+  background: no-repeat fixed center / cover
+    url('../images/default-background.jpg');
+  color: white;
+}
+
+body::before {
+  background-color: transparent;
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: white;
+  font-size: 2rem;
+  text-align: center;
+  text-transform: uppercase;
+  visibility: hidden;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 250ms ease-in-out;
+}
+
+body[data-loading='true']::before {
+  content: 'Loading...';
+  background-color: black;
+  visibility: visible;
+}
+
+body[data-loading='false']::before {
+  content: '';
+  background-color: transparent;
+  visibility: hidden;
+}
+
+.container {
+  width: 85%;
+  max-width: 1344px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    width: 95%;
+  }
+}
+
+/**************************
+ * Primary header         *
+ **************************/
+
+.primary-header {
+  background-color: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(0.5rem);
+  padding: 1.5rem 2rem;
+}
+
+.primary-header .container {
+  display: flex;
+  align-items: center;
+}
+
+.primary-header .logo {
+  font-size: 2rem;
+  text-transform: uppercase;
+}
+
+.primary-header .logo span {
+  font-weight: bold;
+}
+
+@media screen and (max-width: 768px) {
+  .primary-header .container {
+    flex-direction: column;
+    align-items: initial;
+    gap: 1rem;
+  }
+
+  .primary-header .logo {
+    align-self: center;
+  }
+}
+
+/**************************
+ * Search form            *
+ **************************/
+
+.search-form {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.search-form .form-field {
+  width: 50%;
+  position: relative;
+}
+
+.search-form #city-name {
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid white;
+  background-color: transparent;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  transition: all 250ms ease-in-out;
+}
+
+.search-form #city-name::placeholder {
+  color: white;
+}
+
+.search-form #city-name:focus {
+  outline: none;
+  background-color: white;
+  color: black;
+}
+
+.search-form #city-name:focus::placeholder {
+  color: gray;
+}
+
+.search-form .error {
+  position: absolute;
+  background-color: darkred;
+  padding: 0.25rem;
+  top: 100%;
+  left: 0;
+  font-weight: bold;
+  right: 0;
+  display: none;
+}
+
+.search-form .error.active {
+  display: block;
+}
+
+.search-form button[type='submit'] {
+  border: 2px solid white;
+  background-color: transparent;
+  padding: 0.25rem 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+  transition: all 250ms ease-in-out;
+}
+
+.search-form button[type='submit']:hover {
+  background-color: white;
+  color: black;
+}
+
+@media screen and (max-width: 768px) {
+  .search-form .form-field {
+    width: 100%;
+  }
+}
+
+/**************************
+ * Main                   *
+ **************************/
+
+main {
+  flex: 1;
+  padding: 2rem 0;
+  opacity: 0;
+  transition: all 500ms ease-in-out;
+}
+
+main.loaded {
+  opacity: 1;
+}
+
+main .container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+}
+
+section h2 {
+  margin-bottom: 0.5rem;
+}
+
+section h2,
+.background-credits {
+  text-shadow: 1px 1px 2px black;
+}
+
+/**************************
+ * Card                  *
+ **************************/
+
+.card {
+  background-color: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(0.5rem);
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+.card-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-footer {
+  font-weight: bold;
+  text-align: center;
+}
+
+/**************************
+ * Today                  *
+ **************************/
+
+.today {
+  align-self: flex-start;
+}
+
+.card-today {
+  min-width: 325px;
+}
+
+.card-today .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-today .card-header > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-today .card-header .loc {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.card-today .card-header .unit-toggle {
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 250ms ease-in-out;
+}
+
+.card-today .card-header .unit-toggle:hover {
+  background-color: white;
+  color: black;
+}
+
+.card-today .card-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-today .card-body .temps {
+  display: flex;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+
+.card-today .card-body .current-temp {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.card-today .card-body .temps > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-left: 1px solid white;
+  padding-left: 0.5rem;
+}
+
+.card-body .temps .min-temp {
+  color: lightgray;
+}
+
+@media screen and (max-width: 768px) {
+  .today {
+    align-self: initial;
+  }
+}
+
+/**************************
+ * Daily                  *
+ **************************/
+
+.days {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.card-day {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.card-day .card-body {
+  flex-direction: column;
+}
+
+.card-day .card-body .temps {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  font-weight: bold;
+}
+
+.card-day .card-body .temps .min-temp {
+  color: lightgray;
+}
+
+@media screen and (max-width: 500px) {
+  .days {
+    flex-direction: column;
+  }
+}
+
+/**************************
+ * Primary footer         *
+ **************************/
+
+.primary-footer {
+  text-align: center;
+  padding: 0.75rem;
+  background-color: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(0.5rem);
 }

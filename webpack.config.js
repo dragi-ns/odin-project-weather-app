@@ -5,6 +5,9 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
   mode: 'development',
+  experiments: {
+    topLevelAwait: true,
+  },
   entry: {
     main: './src/js/index.js',
   },
